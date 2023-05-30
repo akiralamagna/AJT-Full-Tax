@@ -1,0 +1,6 @@
+type = "checkout_ui_extension"
+name = "RequestFTInvoice"
+
+extension_points = [
+  'Checkout::Actions::RenderBefore'
+]

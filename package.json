@@ -1,0 +1,29 @@
+{
+  "name": "ajt-full-tax-request",
+  "version": "1.0.0",
+  "main": "web/index.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "shopify": "shopify",
+    "build": "shopify app build",
+    "dev": "shopify app dev",
+    "info": "shopify app info",
+    "generate": "shopify app generate",
+    "deploy": "shopify app deploy"
+  },
+  "dependencies": {
+    "@shopify/app": "3.46.1",
+    "@shopify/cli": "3.46.1",
+    "graphql": "^16.6.0",
+    "react": "^17.0.2",
+    "react-router-dom": "^6.11.2"
+  },
+  "author": "jonaslemueldatu",
+  "private": true,
+  "workspaces": [
+    "web",
+    "web/frontend",
+    "extensions/*"
+  ],
+  "description": "This is a template for building a [Shopify app](https://shopify.dev/docs/apps/getting-started) using Node and React. It contains the basics for building a Shopify app."
+}
