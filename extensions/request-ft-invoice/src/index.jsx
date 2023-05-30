@@ -9,7 +9,9 @@ import {
   Checkbox,
   ChoiceList,
   Choice,
-  Grid
+  Grid,
+  useExtensionCapability,
+  useBuyerJourneyIntercept,
 } from "@shopify/checkout-ui-extensions-react";
 
 // Set the entry point for the extension
@@ -160,6 +162,77 @@ function App() {
 
   };
 
+  const canBlockProgress = useExtensionCapability("block_progress");
+  const [validationErrorName, setValidationErrorName] = useState("");
+  const [validationErrorAddress, setValidationErrorAddress] = useState("");
+  const [validationErrorTax, setValidationErrorTax] = useState("");
+
+  useBuyerJourneyIntercept(({canBlockProgress}) => {
+    // Validate that the age of the buyer is known, and that they're old enough to complete the purchase
+
+    if (canBlockProgress && !isNameSet() && checked) {
+      return {
+        behavior: "block",
+        reason: "Name is required",
+        perform: (result) => {
+          // If progress can be blocked, then set a validation error on the custom field
+          if (result.behavior === "block") {
+            setValidationErrorName("Required Field*");
+          }
+        },
+      };
+    }
+
+    if (canBlockProgress && !isAddressSet() && checked) {
+      return {
+        behavior: "block",
+        reason: "Address is required",
+        perform: (result) => {
+          // If progress can be blocked, then set a validation error on the custom field
+          if (result.behavior === "block") {
+            setValidationErrorAddress("Required Field*");
+          }
+        },
+      };
+    }
+
+    if (canBlockProgress && !isTaxSet() && checked) {
+      return {
+        behavior: "block",
+        reason: "Tax is required",
+        perform: (result) => {
+          // If progress can be blocked, then set a validation error on the custom field
+          if (result.behavior === "block") {
+            setValidationErrorTax("Required Field*");
+          }
+        },
+      };
+    }
+
+    return {
+      behavior: "allow",
+      perform: () => {
+        // Ensure any errors are hidden
+        clearValidationErrors();
+      },
+    };
+  });
+
+  function isNameSet() {
+    return name !== "";
+  }
+  function isAddressSet() {
+    return address !== "";
+  }
+  function isTaxSet() {
+    return taxid !== "";
+  }
+  function clearValidationErrors() {
+    setValidationErrorName("");
+    setValidationErrorAddress("");
+    setValidationErrorTax("");
+  }
+
   // Render the extension components
   return (
       <BlockStack>
@@ -172,6 +245,7 @@ function App() {
                 label="Name/Company Name *"
                 onChange={(value) => {
                   // Apply the change to the metafield
+                  setName(value)
                   applyMetafieldsChange({
                     type: "updateMetafield",
                     namespace: metafieldNamespace,
@@ -181,6 +255,7 @@ function App() {
                   });
                 }}
                 value={name}
+                error={validationErrorName}
             />
         )}
         {checked && (
@@ -263,6 +338,7 @@ function App() {
             <TextField
                 label="Address *"
                 onChange={(value) => {
+                  setAddress(value)
                   // Apply the change to the metafield
                   applyMetafieldsChange({
                     type: "updateMetafield",
@@ -273,12 +349,14 @@ function App() {
                   });
                 }}
                 value={address}
+                error={validationErrorAddress}
             />
         )}
         {checked && (
             <TextField
                 label="Tax ID *"
                 onChange={(value) => {
+                  setTaxid(value)
                   // Apply the change to the metafield
                   applyMetafieldsChange({
                     type: "updateMetafield",
@@ -290,6 +368,7 @@ function App() {
                 }}
                 value={taxid}
                 maxLength={13}
+                error={validationErrorTax}
             />
         )}
         {checked && (

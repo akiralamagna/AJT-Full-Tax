@@ -4,3 +4,6 @@ name = "RequestFTInvoice"
 extension_points = [
   'Checkout::Actions::RenderBefore'
 ]
+
+[capabilities]
+block_progress = true
