@@ -58,7 +58,7 @@ function App() {
     key: metafieldBranch,
   });
   const [branch, setBranch] = React.useState(ftBranch == undefined? "headOffice" : ftBranch.value)
-  const [disable, setDisable] = React.useState((branch == undefined || branch == "headOffice") ? true : false);
+  const [disable, setDisable] = React.useState((branch == undefined || branch.includes("headOffice")) ? true : false);
 
   const ftBranchNumber = useMetafield({
     namespace: metafieldNamespace,
@@ -188,7 +188,7 @@ function App() {
         perform: (result) => {
           // If progress can be blocked, then set a validation error on the custom field
           if (result.behavior === "block") {
-            setValidationErrorName("Required Field*");
+            setValidationErrorName("ฟิลด์บังคับ*");
           }
         },
       };
@@ -201,7 +201,7 @@ function App() {
         perform: (result) => {
           // If progress can be blocked, then set a validation error on the custom field
           if (result.behavior === "block") {
-            setValidationErrorAddress("Required Field*");
+            setValidationErrorAddress("ฟิลด์บังคับ*");
           }
         },
       };
@@ -214,7 +214,7 @@ function App() {
         perform: (result) => {
           // If progress can be blocked, then set a validation error on the custom field
           if (result.behavior === "block") {
-            setValidationErrorTax("Required Field*");
+            setValidationErrorTax("ฟิลด์บังคับ*");
           }
         },
       };
@@ -247,13 +247,13 @@ function App() {
   // Render the extension components
   return (
       <BlockStack>
-        <Heading>Optional Information</Heading>
+        <Heading>ข้อมูลทางเลือก</Heading>
         <Checkbox checked={checked} onChange={handleChange}>
-          Request for Full Tax Invoice
+        ขอใบกำกับภาษีเต็มรูปแบบ
         </Checkbox>
         {checked && (
             <TextField
-                label="Name/Company Name *"
+                label="ชื่อ/ชื่อบริษัท *"
                 onChange={(value) => {
                   // Apply the change to the metafield
                   setName(value)
@@ -271,7 +271,7 @@ function App() {
         )}
         {checked && (
             <TextField
-                label="Branch Name"
+                label="ชื่อสาขา"
                 onChange={(value) => {
                   // Apply the change to the metafield
                   applyMetafieldsChange({
@@ -290,8 +290,9 @@ function App() {
             name="choice"
             value={branch}
             onChange={(value) => {
-              if (value == "headOffice") {
+              if (value.includes("headOffice")) {
                 console.log(value)
+                console.log("1")
                 applyMetafieldsChange({
                   type: "updateMetafield",
                   namespace: metafieldNamespace,
@@ -304,10 +305,11 @@ function App() {
                   namespace: metafieldNamespace,
                   key: metafieldBranchNumberKey,
                 });
-                setBranchno(" ");
+                setBranchno("");
                 setBranch("headOffice");
               } else {
                 console.log(value)
+                console.log("2")
                 applyMetafieldsChange({
                   type: "updateMetafield",
                   namespace: metafieldNamespace,
@@ -317,7 +319,7 @@ function App() {
                 });
                 setBranch("branchNumber");
               }
-              setDisable(value == "headOffice"? true : false)
+              setDisable(value.includes("headOffice") ? true : false)
             }}
         >
           <Grid
@@ -327,10 +329,10 @@ function App() {
               blockAlignment={'baseline'}
               inlineAlignment={'center'}
           >
-          <Choice id="headOffice">Head Office</Choice>
-          <Choice id="branchNumber">Branch Number:</Choice>
+          <Choice id="headOffice">สำนักงานใหญ่</Choice>
+          <Choice id="branchNumber">หมายเลขสาขา:</Choice>
             <TextField
-                label="Branch Number"
+                label="หมายเลขสาขา"
                 onChange={(value) => {
                   // Apply the change to the metafield
                   applyMetafieldsChange({
@@ -340,6 +342,7 @@ function App() {
                     valueType: "string",
                     value,
                   });
+                  setBranchno(value)
                 }}
                 disabled={disable}
                 value={branchno}
@@ -349,7 +352,7 @@ function App() {
             )}
         {checked && (
             <TextField
-                label="Address *"
+                label="ที่อยู่ *"
                 onChange={(value) => {
                   setAddress(value)
                   // Apply the change to the metafield
@@ -367,7 +370,7 @@ function App() {
         )}
         {checked && (
             <TextField
-                label="Tax ID *"
+                label="หมายเลขประจำตัวผู้เสียภาษี *"
                 onChange={(value) => {
                   setTaxid(value)
                   // Apply the change to the metafield
@@ -386,7 +389,7 @@ function App() {
         )}
         {checked && (
             <TextField
-                label="Email Address"
+                label="ที่อยู่อีเมล"
                 onChange={(value) => {
                   // Apply the change to the metafield
                   applyMetafieldsChange({
@@ -403,7 +406,7 @@ function App() {
         )}
         {checked && (
             <TextField
-                label="Phone Number"
+                label="หมายเลขโทรศัพท์"
                 onChange={(value) => {
                   // Apply the change to the metafield
                   applyMetafieldsChange({
