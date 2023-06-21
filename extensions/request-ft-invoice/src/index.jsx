@@ -93,6 +93,17 @@ function App() {
   // Set a function to handle updating a metafield
   const applyMetafieldsChange = useApplyMetafieldsChange();
 
+  if (ftBranch == undefined) {
+    applyMetafieldsChange({
+      type: "updateMetafield",
+      namespace: metafieldNamespace,
+      key: metafieldBranch,
+      valueType: "string",
+      value: "headOffice",
+    });
+  }
+
+
   // Set a function to handle the Checkbox component's onChange event
   const handleChange = () => {
     if (checked) {
@@ -280,6 +291,7 @@ function App() {
             value={branch}
             onChange={(value) => {
               if (value == "headOffice") {
+                console.log(value)
                 applyMetafieldsChange({
                   type: "updateMetafield",
                   namespace: metafieldNamespace,
@@ -295,6 +307,7 @@ function App() {
                 setBranchno(" ");
                 setBranch("headOffice");
               } else {
+                console.log(value)
                 applyMetafieldsChange({
                   type: "updateMetafield",
                   namespace: metafieldNamespace,
